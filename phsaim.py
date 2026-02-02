@@ -45,12 +45,23 @@ def main():
     print("> Implanting false memories...")
     time.sleep(.6)
 
+    available_responses = RESPONSES.copy()
+
     try:
         while True:
             print('\n> ' + random.choice(THINKING_PROMPTS) + '...')
             time.sleep(random.random() * 0.5 + 0.5)
-            print("AI:    " + random.choice(RESPONSES))
+            response = random.choice(available_responses)
+            words = response.split(' ')
+            print("AI:", end='  ')
+            for word in words:
+                print(word, end=' ', flush=True)
+                time.sleep(0.1)
+            available_responses.remove(response)
+            if not available_responses:
+                available_responses = RESPONSES.copy()
             input('\n> Press ENTER for next response.')
+
     except (KeyboardInterrupt, EOFError):
         print('\n\n> ' + random.choice(KILL_MESSAGES) + '.')
         time.sleep(.4)
@@ -59,4 +70,8 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         print("I don't need _you_ to pass me arguments.")
         sys.exit(1)
-    main()
+
+    try:
+        main()
+    except (KeyboardInterrupt, EOFError):
+        print()
